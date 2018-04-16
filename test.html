@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test interface pour Ousse</title>
+    <style>
+        @font-face {
+            font-family:Minecraft;
+            src:url("//hydra-media.cursecdn.com/hydra/fonts/minecraft.eot?#iefix"),url(//hydra-media.cursecdn.com/hydra/fonts/minecraft.woff) format('woff'),url(//hydra-media.cursecdn.com/hydra/fonts/minecraft.ttf) format('truetype')
+        }
+        @media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:1.5dppx) {
+        }
+
+        .edition-boxes p {
+            margin:0 !important
+        }
+        .edition-boxes > div {
+            display:-ms-flexbox;
+            display:flex;
+            -ms-flex-wrap:wrap;
+            flex-wrap:wrap
+        }
+        .edition-box > p {
+            display:block;
+            font-weight:bold;
+            border-bottom:inherit
+        }
+        .edition-box > table,.edition-box > div {
+            margin:0.4em auto
+        }
+        .edition-box > table th,.edition-box > table tr {
+            padding:0
+        }
+        @supports not (flex-wrap:wrap) {
+            .edition-boxes > div {
+                display:block
+            }
+        }
+        .invslot {
+            position:relative;
+            display:inline-block;
+            background:#8B8B8B no-repeat center center / 32px 32px;
+            border:2px solid;
+            border-color:#373737 #FFF #FFF #373737;
+            width:32px;
+            height:32px;
+            font-size:16px;
+            line-height:1;
+            text-align:left;
+            vertical-align:bottom;
+            margin-right: -0.25em; /* A SUPPRIMER LORS DE L'INTEGRATION */
+        }
+        .invslot:before,.invslot:after {
+            content:"";
+            position:absolute;
+            background-color:#8B8B8B;
+            height:2px;
+            width:2px;
+            pointer-events:none
+        }
+        .invslot:before {
+            bottom:-2px;
+            left:-2px
+        }
+        .invslot:after {
+            top:-2px;
+            right:-2px
+        }
+        .invslot-large {
+            padding:8px
+        }
+        .invslot-item,.invslot-item > a:first-child {
+            position:relative;
+            display:block;
+            margin:-2px;
+            padding:2px
+        }
+
+        .invslot-plain > .invslot-item,.invslot-plain > .invslot-item > a:first-child {
+            margin:0;
+            padding:0
+        }
+        .mcui {
+            display:inline-block;
+            position:relative;
+            background-color:#C6C6C6;
+            border:2px solid;
+            border-color:#DBDBDB #5B5B5B #5B5B5B #DBDBDB;
+            padding:6px;
+            text-align:left;
+            white-space:nowrap;
+            vertical-align:bottom
+        }
+        .mcui-Crafting_Table > *,.mcui-Furnace > * {
+            display:inline-block;
+            vertical-align:top
+        }
+        .mcui-Crafting_Table .mcui-row {
+            display:block
+        }
+        .mcui-Crafting_Table > .mcui-arrow {
+            background:url(https://minecraft-fr.gamepedia.com/media/minecraft.gamepedia.com/8/86/Grid_layout_Arrow_%28small%29.png) no-repeat;
+            width:32px;
+            height:26px;
+            margin:40px 4px 0
+        }
+        .mcui-Crafting_Table > .mcui-output {
+            margin-top:28px
+        }
+
+        .mcui-Furnace > .mcui-arrow {
+            background:url(https://minecraft-fr.gamepedia.com/media/minecraft.gamepedia.com/8/8e/Grid_layout_Furnace_Progress.png) no-repeat;
+            width:44px;
+            height:32px;
+            margin:36px 18px 0 14px
+        }
+
+        .mcui-Furnace > .mcui-output {
+            margin-top:28px
+        }
+        .mcui-Brewing_Stand > * {
+            display:block
+        }
+        .mcui-Brewing_Stand .invslot {
+            vertical-align:top
+        }
+
+        .mcui-Brewing_Stand > .mcui-input > .invslot {
+            margin-top:3px
+        }
+
+        .mcui-Brewing_Stand .mcui-arrow {
+            background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft.gamepedia.com/4/4b/Grid_layout_Brewing_Arrow.png)
+        }
+        .mcui-Brewing_Stand > .mcui-input.mcui-inactive > .mcui-arrow {
+            background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft.gamepedia.com/5/59/Grid_layout_Brewing_Arrow_%28In-active%29.png)
+        }
+
+        .mcui-Brewing_Stand .mcui-output .invslot {
+            background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft.gamepedia.com/5/59/Grid_layout_Brewing_Empty.png)
+        }
+
+        .mcui-Hotbar .invslot {
+            margin:4px
+        }
+
+        .grid img {
+            padding:2px
+        }
+
+        .grid > .item > .number > a {
+            color:#FFF;
+            text-decoration:none
+        }
+
+        .grid-Crafting_Table td,.grid-Furnace td,.grid-Brewing_Stand td,.grid-generic td {
+            border:none;
+            padding:0
+        }
+
+        .grid-Crafting_Table .shapeless span {
+            cursor:help
+        }
+
+        .infobox-imagearea > div:not(:first-child) {
+            padding-top:1em
+        }
+
+        .infobox-rows > tbody > tr > th {
+            text-align:left;
+            white-space:nowrap
+        }
+        #content .infobox-rows p {
+            margin:0
+        }
+        .infobox-rows audio {
+            width:184px
+        }
+        .infobox-rows dl + dl {
+            margin-top:-0.4em
+        }
+        .infobox-rows dl:last-child {
+            margin-bottom:0.2em
+        }
+
+        .navbox table {
+            background:#FFF;
+            margin-left:-4px;
+            margin-right:-2px
+        }
+        .navbox table:first-child {
+            margin-top:-2px
+        }
+        .navbox table:last-child {
+            margin-bottom:-2px
+        }
+
+        .navbox th {
+            background-color:#EEE;
+            padding:0 10px;
+            white-space:nowrap;
+            text-align:right
+        }
+        .navbox td {
+            width:100%;
+            padding:0 0 0 2px
+        }
+
+        #content .loadbox-navbox > p {
+            background-color:#CCC;
+            text-align:center;
+            margin:0;
+            padding:0 3px
+        }
+        .loadbox-navbox > p > b {
+            font-size:110%
+        }
+
+        .loadbox-navbox .navbox > tbody > tr:first-child {
+            display:none
+        }
+        .sprite {
+            display:inline-block;
+            vertical-align:text-top;
+            height:16px;
+            width:16px;
+            background-repeat:no-repeat
+        }
+
+        .inv-sprite {
+            background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/4/44/InvSprite.png);
+            width:32px;
+            height:32px;
+            vertical-align:middle
+        }
+
+        .sprite-preview:hover div {
+            opacity:0.7 !important
+        }
+
+        table.schematic td {
+            vertical-align:top
+        }
+
+        @-webkit-keyframes layered-blueprint-fade-in {
+            0% {
+                opacity:0;
+                visibility:hidden
+            }
+            100% {
+                opacity:1;
+                visibility:visible
+            }
+        }
+        @keyframes layered-blueprint-fade-in {
+            0% {
+                opacity:0;
+                visibility:hidden
+            }
+            100% {
+                opacity:1;
+                visibility:visible
+            }
+        }
+
+        @-webkit-keyframes layered-blueprint-fade-out {
+            0% {
+                opacity:1;
+                visibility:visible
+            }
+            100% {
+                opacity:0;
+                visibility:hidden
+            }
+        }
+        @keyframes layered-blueprint-fade-out {
+            0% {
+                opacity:1;
+                visibility:visible
+            }
+            100% {
+                opacity:0;
+                visibility:hidden
+            }
+        }
+
+        .alternaterows tr:nth-child(even),.infobox-rows tr:nth-child(even) {
+            background-color:#F9F9F9
+        }
+
+        #file img {
+            max-width:100%;
+            height:auto
+        }
+
+        .treeview ul,.treeview li {
+            margin:0;
+            padding:0;
+            list-style-type:none;
+            list-style-image:none
+        }
+        .treeview li li {
+            position:relative;
+            padding-left:13px;
+            margin-left:7px;
+            border-left:1px solid #636363
+        }
+        .treeview li li:before {
+            content:"";
+            position:absolute;
+            top:0;
+            left:-1px;
+            width:11px;
+            height:11px;
+            border-bottom:1px solid #636363
+        }
+        .treeview li li:last-child:not(.treeview-continue) {
+            border-color:transparent
+        }
+        .treeview li li:last-child:not(.treeview-continue):before {
+            border-left:1px solid #636363;
+            width:10px
+        }
+
+        #mw-subcategories ul {
+            margin-left:10px
+        }
+        .hlist ul {
+            display:inline;
+            margin:0
+        }
+        .hlist li {
+            display:inline-block;
+            margin:0;
+            white-space:nowrap
+        }
+        .hlist li:not(:last-child) {
+            padding-right:0.313em
+        }
+        .hlist li:not(:last-child):after {
+            content:"";
+            display:inline-block;
+            position:relative;
+            left:0.313em;
+            bottom:0.234em;
+            background-color:#000;
+            height:3px;
+            width:3px
+        }
+        .hlist li > ul li:first-child:before {
+            content:"("
+        }
+        .hlist li > ul li:last-child:after {
+            content:")";
+            margin-right:-0.313em
+        }
+        .hlist li li li {
+            font-size:x-small
+        }
+        .animated > *:not(.animated-active),.animated-paused > *:not(.animated-active),.animated > .animated-subframe > *:not(.animated-active),.animated-paused > .animated-subframe > *:not(.animated-active) {
+            display:none
+        }
+
+        .references > li {
+            white-space:nowrap
+        }
+
+        body {
+            -moz-tab-size:4;
+            -o-tab-size:4;
+            tab-size:4
+        }
+        .list-style-none ul,.list-style-none ol {
+            list-style:none;
+            margin-left:0
+        }
+
+        .col-1-left td:nth-child(1),.col-2-left td:nth-child(2),.col-3-left td:nth-child(3),.col-4-left td:nth-child(4),.col-5-left td:nth-child(5),.col-6-left td:nth-child(6),.col-7-left td:nth-child(7),.col-8-left td:nth-child(8),.col-9-left td:nth-child(9) {
+            text-align:left
+        }
+        .col-1-center td:nth-child(1),.col-2-center td:nth-child(2),.col-3-center td:nth-child(3),.col-4-center td:nth-child(4),.col-5-center td:nth-child(5),.col-6-center td:nth-child(6),.col-7-center td:nth-child(7),.col-8-center td:nth-child(8),.col-9-center td:nth-child(9) {
+            text-align:center
+        }
+        .col-1-right td:nth-child(1),.col-2-right td:nth-child(2),.col-3-right td:nth-child(3),.col-4-right td:nth-child(4),.col-5-right td:nth-child(5),.col-6-right td:nth-child(6),.col-7-right td:nth-child(7),.col-8-right td:nth-child(8),.col-9-right td:nth-child(9) {
+            text-align:right
+        }
+        .toc.console-toc ul {
+            text-align:center
+        }
+
+        b,strong {
+            font-weight:bold
+        }
+
+        /*
+        html {
+            background-color:#E6EFF4
+        }
+        html body {
+            height:auto !important;
+            min-height:100%;
+            background-color:#202020;
+            background-image:url(//minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/2/26/Background.png)
+        }*/
+
+        #mw-panel *:not(h3) > a:not(:hover):not(:focus),#footer a:not(:hover):not(:focus),.mw-notification a:not(:hover):not(:focus) {
+            color:#BFBFBF !important
+        }
+        #mw-panel h3,#mw-panel a,#footer li,#footer a,.mw-notification a {
+            color:#FFF !important
+        }
+
+        #p-namespaces a,#p-views a,div#mw-head div.vectorMenu h4 {
+            color:#000
+        }
+        #p-namespaces .new a,#p-views .new a {
+            color:#BA0000
+        }
+
+        div.vectorTabs span {
+            position:relative;
+            background:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/1/1a/Vector-tabs.png) no-repeat right top;
+            margin-right:8px
+        }
+        div.vectorTabs span:before {
+            content:"";
+            position:absolute;
+            left:0;
+            background:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/1/1a/Vector-tabs.png) no-repeat left top;
+            width:6px;
+            height:100%;
+            pointer-events:none
+        }
+        #left-navigation div.vectorTabs li:first-child span:before {
+            background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/4/49/Vector-tabs-first.png);
+            height:93px
+        }
+        div.vectorTabs li.selected span,div.vectorTabs li span:hover,div.vectorTabs li span:focus {
+            background-position:right bottom
+        }
+        div.vectorTabs li a {
+            padding:15px 14px 0 20px;
+            height:21px
+        }
+        #ca-watch.icon a,#ca-unwatch.icon a {
+            padding-top:36px;
+            width:45px;
+            background-position:17px 15px !important;
+            transform-origin:25px 23.5px !important
+        }
+
+        div#mw-head div.vectorMenu h3 {
+            position:relative;
+            background:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/1/1a/Vector-tabs.png) no-repeat right top;
+            padding:0;
+            margin:0;
+            height:36px;
+            overflow:visible
+        }
+        div#mw-head div.vectorMenu h3:before {
+            content:"";
+            position:absolute;
+            top:0;
+            left:-6px;
+            background:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/1/1a/Vector-tabs.png) no-repeat left top;
+            width:6px;
+            height:100%
+        }
+        div#mw-head div.vectorMenu h3:hover,div#mw-head div.vectorMenu.menuForceShow h3 {
+            background-position:right bottom
+        }
+        div.vectorMenu h3 span {
+            padding:16px 0 0 14px;
+            margin-right:28px;
+            font-weight:bold
+        }
+        div.vectorMenu h3 a {
+            height:36px;
+            margin-right:8px
+        }
+
+        #p-search form {
+            position:relative;
+            background-color:rgba(0,0,0,0.365);
+            border-right:4px solid #538631;
+            border-bottom:4px solid #382314;
+            margin-top:-14px;
+            padding:0 4px 0 5px;
+            height:27px
+        }
+        #p-search form:before {
+            content:"";
+            position:absolute;
+            top:0;
+            left:-4px;
+            border-top:4px solid rgba(0,0,0,0.365);
+            border-left:4px solid transparent
+        }
+        #p-search form:after {
+            content:"";
+            position:absolute;
+            top:0;
+            right:-4px;
+            border-top:4px solid #80BA5A;
+            border-left:4px solid #538631
+        }
+
+        ::-webkit-input-placeholder {
+            color:inherit;
+            opacity:0.54
+        }
+
+        ul {
+            list-style-image:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/3/39/List_bullet.svg)
+        }
+
+        .successbox strong p {
+            margin:0
+        }
+
+        #pagehistory li {
+            border-color:transparent
+        }
+
+        .client-js #preftoc li.selected a {
+            background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/5/57/Pref-tab-bg.png)
+        }
+
+        @media (-webkit-min-device-pixel-ratio:1.5),(min-resolution:1.5dppx) {
+            body {
+                background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/d/de/Background_HiDPI.png);
+                background-size:48px auto
+            }
+
+            #left-navigation div.vectorTabs li:first-child span:before {
+                background-image:url(https://minecraft-fr.gamepedia.com/media/minecraft-fr.gamepedia.com/7/71/Vector_tab_first_HiDPI.png);
+                background-size:6px auto
+            }
+        }
+
+        .invslot {
+            font-family: Minecraft;
+            color: white;
+            text-rendering: optimizeLegibility;
+        }
+
+        .invslot [data-minetip-title] {
+            position: relative;
+        }
+
+        .invslot [data-minetip-title]:hover:before {
+            content: attr(data-minetip-title);
+            position: absolute;
+            left: -5%;
+            top: 115%;
+            background: rgba(0,0,20,.9);
+            padding: .1em .5em;
+            height: 1.5em;
+            border: solid 3px #26035d;
+            border-radius: 5px;
+            white-space: nowrap;
+            z-index: 9001;
+        }
+
+        .invslot [data-minetip-title].tooltip-for-text:hover:before {
+            left: 0%;
+            top: 85%;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <div class="mcui mcui-Crafting_Table">
+        <span style="font-family: Minecraft, Sans serif;color: #454545;
+text-rendering: optimizeLegibility;">Contenu du coffre</span>
+        <br>
+        <div class="mcui-input">
+            <div class="mcui-row">
+                <div class="invslot">
+                    <span class="invslot-item" data-minetip-title="Lingot de fer">
+                        <a href="/Lingot_de_fer">
+                            <span class="sprite inv-sprite" style="background-image:url(https://d1u5p3l4wpay3k.cloudfront.net/minecraft_fr_gamepedia/4/44/InvSprite.png);background-position:-224px -1120px"><br></span>
+                        </a>
+                    </span>
+                </div>
+                <div class="invslot"><br></div>
+                <div class="invslot">
+                    <span class="invslot-item" data-minetip-title="Lingot de fer">
+                        <a href="/Lingot_de_fer">
+                            <span class="sprite inv-sprite" style="background-image:url(https://d1u5p3l4wpay3k.cloudfront.net/minecraft_fr_gamepedia/4/44/InvSprite.png);background-position:-224px -1120px"><br></span>
+                        </a></span>
+                </div>
+                <div class="invslot"><br></div>
+                <div class="invslot"><br></div>
+                <div class="invslot"><br></div>
+                <div class="invslot"><br></div>
+                <div class="invslot"><br></div>
+                <div class="invslot"><br></div>
+            </div>
+            <span class="mcui-row">
+                <span class="invslot">
+                    <span class="invslot-item" data-minetip-title="Lingot de fer">
+                        <a href="/Lingot_de_fer">
+                            <span class="sprite inv-sprite" style="background-image:url(https://d1u5p3l4wpay3k.cloudfront.net/minecraft_fr_gamepedia/4/44/InvSprite.png);background-position:-224px -1120px"><br></span>
+                        </a>
+                    </span>
+                </span>
+                <span class="invslot">
+                    <span class="invslot-item" data-minetip-title="Coffre"><a href="/Coffre">
+                        <span class="sprite inv-sprite" style="background-image:url(https://d1u5p3l4wpay3k.cloudfront.net/minecraft_fr_gamepedia/4/44/InvSprite.png);background-position:-704px -1216px"><br></span>
+                    </a>
+                    </span>
+                </span>
+                <span class="invslot">
+                    <span class="invslot-item" data-minetip-title="Lingot de fer">
+                        <a href="/Lingot_de_fer">
+                            <span class="sprite inv-sprite" style="background-image:url(https://d1u5p3l4wpay3k.cloudfront.net/minecraft_fr_gamepedia/4/44/InvSprite.png);background-position:-224px -1120px"><br>
+                            </span>
+                        </a>
+                    </span>
+                </span>
+                <span class="invslot"><br></span>
+                <span class="invslot"><br></span>
+                <span class="invslot"><br></span>
+                <span class="invslot"><br></span>
+                <span class="invslot"><br></span>
+                <span class="invslot"><br></span>
+            </span>
+            <span class="mcui-row">
+                <span class="invslot"><br></span>
+                <span class="invslot">
+                    <span class="invslot-item" data-minetip-title="Lingot de fer">
+                        <a href="/Lingot_de_fer">
+                            <span class="sprite inv-sprite" style="background-image:url(https://d1u5p3l4wpay3k.cloudfront.net/minecraft_fr_gamepedia/4/44/InvSprite.png);background-position:-224px -1120px"><br></span>
+                        </a>
+                    </span>
+                </span>
+                <span class="invslot"><br></span>
+            </span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
